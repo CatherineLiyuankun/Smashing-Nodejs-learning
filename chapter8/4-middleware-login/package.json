@@ -1,0 +1,12 @@
+{
+	"name": "my-login",
+	"version": "0.0.1",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"connect": "^1.9.2",
+		"connect-busboy": "0.0.2",
+		"connect-redis": "^3.3.3",
+		"cookie-parser": "^1.4.3",
+		"express-session": "^1.15.6"
+	}
+}
