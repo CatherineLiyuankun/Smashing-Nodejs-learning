@@ -1,0 +1,11 @@
+#chat {
+    display: none;
+}
+.confirmed {
+    color: green;
+}
+
+form#dj { display: none; }
+#results a { display: none; }
+form#dj.isDJ #results a { display: inline;}
+form#dj.isDJ { display: block; }
