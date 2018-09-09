@@ -5,7 +5,11 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1>Twitter app</h1>
+    <p>Please enter your search term:</p>
+    <form action="/search" method="GET">
+      <input type="text" name="q">
+      <button>Search</button>
+    </form>
   </body>
 </html>
