@@ -1,0 +1,9 @@
+{
+  "name": "ws-cursors",
+  "description": "a example project with websocket",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "2.5.1",
+    "websocket.io": "0.2.1"
+  }
+}

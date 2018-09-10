@@ -1,0 +1,61 @@
+<! DOCTYPE HTML>
+<html>
+<head>
+  <title>websocket</title>
+  <script type="text/javascript">
+    var lastMessage;
+    window.onload = function () {
+      var ws = new WebSocket('ws://1.1.8.8:3000');
+      ws.onopen = function () {
+        document.onmousemove = function (ev) {
+          ws.send(JSON.stringify({ x: ev.clientX, y: ev.clientY }));
+        }
+      }
+
+      var initialized;
+      ws.onmessage = function (ev) {
+        var obj = JSON.parse(ev.data);
+
+        // the first message is the position of all existing cursors
+        if (!initialized) {
+          initialized = true;
+          for (var id in obj) {
+            move(id, obj[id]);
+          }
+        } else {
+          // other messages can either be a position change or
+          // a disconnection
+          if ('disconnect' == obj.type) {
+            remove(obj.id);
+          } else {
+             move(obj.id, obj.pos);
+          }
+        }
+      }
+
+        function move (id, pos) {
+          var cursor = document.getElementById('cursor-' + id);
+
+          if (!cursor) {
+            cursor = document.createElement('img');
+            cursor.id = 'cursor-' + id;
+            cursor.src = 'octofication.png';
+            cursor.style.position = 'absolute';
+            document.body.appendChild(cursor);
+          }
+
+          cursor.style.left = pos.x + 'px';
+          cursor.style.top = pos.y + 'px';
+        }
+
+        function remove (id) {
+          var cursor = document.getElementById('cursor-' + id);
+          cursor.parentNode.removeChild(cursor);
+        }
+    }
+  </script>
+</head>
+<body>
+  <h1>WebSocket Echo</h1>
+</body>
+</html>
