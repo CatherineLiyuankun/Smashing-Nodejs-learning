@@ -1,0 +1,18 @@
+extends layout
+block body
+  if (email)
+    p Congratulations on signing up, please sign in below. 
+  
+  form(action='/login', method='POST')
+    fieldset
+      lagend Log in
+      p
+        label Email
+        input(name='user[email]', type='text')
+      p
+        label Pasword
+        input(name='user[password]', type='text')
+      p
+        button Submit
+      p
+        a(href='/') Back
