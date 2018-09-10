@@ -4,32 +4,72 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
+var search = require('./search');
 var path = require('path');
+var http = require('http');
 
 var app = express();
 
-// all environments
+/**
+ * Configure.
+ */
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('view options', { layout: false });
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+/**
+ * Routes.
+ */
+app.get('/', function (req, res) {
+  res.render('index');
+});
+
+app.get('/search', function (req, res, next) {
+  search(req.query.q, function (err, tweets) {
+    if (err) {
+      return next(err);
+    }
+    res.render('search', { results: tweets, search: req.query.q});
+  });
+});
+
+app.get('/send', function (req, res) {
+  console.log(req.header('host'));
+  console.log(req.is('json'));
+  console.log(res.header('content-type'));
+  res.send([1,2,3]);
+})
+
+app.get('/redirect', function (req, res) {
+  res.redirect('/');
+});
+
+app.get('/user/:name?', function (req, res) {
+  req.params.name  =  req.params.name || 'No name'
+  res.end(req.params.name);
+});
+
+function secure (req, res, next) {
+  var login = false;
+  if (!login) {
+    return res.send(403);
+  } else {
+    next();
+  }
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/me', secure, function (res, req, next) {
+  next();
+});
+
+// app.error(function (err, req, res, next) {
+//   if (err.message == 'Bad twitter response') {
+//     res.render('twitter-error');
+//   } else {
+//     next();
+//   }
+// });
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
